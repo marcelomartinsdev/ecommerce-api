@@ -1,6 +1,5 @@
-package com.api.ecommerce.dto.cliente;
+package com.api.ecommerce.dto;
 
-import com.api.ecommerce.dto.endereco.EnderecoRequestDTO;
 import com.api.ecommerce.model.BaseEntity;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

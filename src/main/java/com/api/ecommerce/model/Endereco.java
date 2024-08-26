@@ -18,8 +18,8 @@ public class Endereco extends BaseEntity {
     private String logradouro;
     private int numero;
     private String complemento;
-    private String cidade;
-    private String estado;
+    private String localidade;
+    private String uf;
     private String cep;
     private TipoEnderecoEnum tipoEnderecoEnum;
 }

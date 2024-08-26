@@ -1,4 +1,4 @@
-package com.api.ecommerce.dto.cliente;
+package com.api.ecommerce.dto;
 
 import com.api.ecommerce.model.BaseEntity;
 

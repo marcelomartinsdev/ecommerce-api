@@ -1,33 +1,37 @@
 package com.api.ecommerce.service;
 
-import com.api.ecommerce.dto.cliente.CadastroClienteRequestDTO;
+import com.api.ecommerce.dto.CadastroClienteRequestDTO;
 import com.api.ecommerce.model.Cliente;
 import com.api.ecommerce.repositories.ClienteRepository;
+import com.api.ecommerce.service.mapper.ClienteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    public String cadastroCliente(CadastroClienteRequestDTO cadastroClienteRequestDTO) {
-        Cliente cliente = toCliente(cadastroClienteRequestDTO);
+    private final EnderecoService enderecoService;
 
+    private final ClienteMapper clienteMapper;
 
+    public ClienteService(EnderecoService enderecoService, ClienteMapper clienteMapper){
+        this.enderecoService = enderecoService;
+        this.clienteMapper = clienteMapper;
     }
 
-
-    private Cliente toCliente(CadastroClienteRequestDTO cadastroClienteRequestDTO) {
-        Cliente cliente = new Cliente();
-
-        cliente.setName(cadastroClienteRequestDTO.getName());
-        cliente.setEmail(cadastroClienteRequestDTO.getEmail());
-        cliente.setCpf(cadastroClienteRequestDTO.getCpf());
-        cliente.setDataNascimento(cadastroClienteRequestDTO.getDataNascimento());
-        cliente.setDataCadastro(cadastroClienteRequestDTO.getDataCadastro());
-//        cliente.setEnderecoList(cadastroClienteRequestDTO.getEnderecoRequestDTOList());
-        return cliente;
+    public String cadastroCliente(CadastroClienteRequestDTO cadastroClienteRequestDTO){
+        Cliente cliente = clienteMapper.toCliente(cadastroClienteRequestDTO);
+        cliente.setDataCadastro(LocalDateTime.now());
+        cliente.setDataModificacao(LocalDateTime.now());
+        cliente.setDataInsercao(LocalDateTime.now());
+        clienteRepository.save(cliente);
+        enderecoService.salvarEndereco(cadastroClienteRequestDTO.getEnderecoRequestDTOList().get(0), cliente);
+        return "Cliente Cadastrado!";
     }
+
 
 }
