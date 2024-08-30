@@ -35,8 +35,6 @@ public class PedidoService {
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setDataPedido(LocalDateTime.now());
-        pedido.setDataInsercao(LocalDateTime.now());
-        pedido.setDataModificacao(LocalDateTime.now());
         pedido.setEndereco(cliente.getEnderecoList().get(0));
 
         List<ItemPedido> itemPedidoList = new ArrayList<>();
@@ -47,8 +45,6 @@ public class PedidoService {
             itemPedido.setPedido(pedido);
             itemPedido.setProduto(produto);
             itemPedido.setQuantidade(pedidoRequestDTO.getItemPedidoDTOS().get(cont).getQuantidade());
-            itemPedido.setDataInsercao(LocalDateTime.now());
-            itemPedido.setDataModificacao(LocalDateTime.now());
             itemPedido.setPrecoUnitario(produto.getPreco());
             itemPedidoList.add(itemPedido);
             cont++;
@@ -58,6 +54,7 @@ public class PedidoService {
         pedido.setValorTotal(valorTotalPedido(itemPedidoList));
         pedido.setStatusPedido(StatusPedido.EM_ATENDIMENTO);
         pedidoRepository.save(pedido);
+        produtoService.consumirEstoque(produtoList, pedidoRequestDTO.getItemPedidoDTOS());
         log.info("Pedido criado para o cliente: {}", cliente.getName());
         return "Pedido criado com sucesso!";
     }
