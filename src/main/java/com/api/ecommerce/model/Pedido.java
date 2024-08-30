@@ -13,17 +13,19 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class Pedido extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pedidoId;
     @ManyToOne
     @JoinColumn(name = "clienteId")
     private Cliente cliente;
     private LocalDateTime dataPedido;
-    private int valorTotal;
+    private double valorTotal;
     @ManyToOne
     @JoinColumn(name = "enderecoEntregaId")
     private Endereco endereco;
+    @Enumerated(value = EnumType.STRING)
     private StatusPedido statusPedido;
     private String codigoRastreio;
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST)
     private List<ItemPedido> itemPedidoList;
 }

@@ -1,9 +1,6 @@
 package com.api.ecommerce.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,6 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ItemPedido extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "pedidoId")
@@ -20,6 +18,6 @@ public class ItemPedido extends BaseEntity {
     @JoinColumn(name = "produtoId")
     private Produto produto;
     private int quantidade;
-    private int precoUnitario;
+    private double precoUnitario;
 }
 

@@ -18,12 +18,12 @@ public class ClienteService {
 
     private final ClienteMapper clienteMapper;
 
-    public ClienteService(EnderecoService enderecoService, ClienteMapper clienteMapper){
+    public ClienteService(EnderecoService enderecoService, ClienteMapper clienteMapper) {
         this.enderecoService = enderecoService;
         this.clienteMapper = clienteMapper;
     }
 
-    public String cadastroCliente(CadastroClienteRequestDTO cadastroClienteRequestDTO){
+    public String cadastroCliente(CadastroClienteRequestDTO cadastroClienteRequestDTO) {
         Cliente cliente = clienteMapper.toCliente(cadastroClienteRequestDTO);
         cliente.setDataCadastro(LocalDateTime.now());
         cliente.setDataModificacao(LocalDateTime.now());
@@ -33,5 +33,7 @@ public class ClienteService {
         return "Cliente Cadastrado!";
     }
 
-
+    public Cliente retornarCliente(Long id) {
+        return clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente com id: " + id + " não encontrado!"));
+    }
 }
