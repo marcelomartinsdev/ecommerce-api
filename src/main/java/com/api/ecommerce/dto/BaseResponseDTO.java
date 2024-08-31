@@ -9,7 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BaseResponseDTO {
     private Integer code;
-    private String status;
     private String message;
     private Object data;
 }
