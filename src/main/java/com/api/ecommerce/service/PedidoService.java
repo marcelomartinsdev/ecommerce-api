@@ -28,6 +28,12 @@ public class PedidoService {
     @Autowired
     private ProdutoService produtoService;
 
+    @Autowired
+    private HistoricoService historicoService;
+
+    @Autowired
+    private PagamentoService pagamentoService;
+
     @Transactional
     public String cadastroPedido(PedidoRequestDTO pedidoRequestDTO) {
 
@@ -56,6 +62,7 @@ public class PedidoService {
         pedidoRepository.save(pedido);
         produtoService.consumirEstoque(produtoList, pedidoRequestDTO.getItemPedidoDTOS());
         log.info("Pedido criado para o cliente: {}", cliente.getName());
+        historicoService.salvarHistorico(pedido);
         return "Pedido criado com sucesso!";
     }
 
@@ -65,5 +72,23 @@ public class PedidoService {
             valorTotal += itemPedido.getPrecoUnitario() * itemPedido.getQuantidade();
         }
         return valorTotal;
+    }
+
+    public Pedido getPedidoId(Long id) {
+        return pedidoRepository.findById(id).orElseThrow(() -> new RuntimeException("Pedido com id: " + id + " não encontrado!"));
+    }
+
+    @Transactional
+    public String finalizarPedido(Long idPedido) {
+        Pedido pedido = getPedidoId(idPedido);
+        if (!pedido.getStatusPedido().equals(StatusPedido.EM_ATENDIMENTO)) {
+            throw new RuntimeException("Status do pedido: " + pedido.getStatusPedido() + " não pode ser finalizado!");
+        }
+
+        pagamentoService.gerarPagamento(pedido);
+        pedido.setStatusPedido(StatusPedido.AGUARDANDO_CONFIMACO_PAGAMENTO);
+        log.info("Pedido {} em: {}", pedido.getPedidoId(), pedido.getStatusPedido());
+        pedidoRepository.save(pedido);
+        return "Pedido finalizado com sucesso!";
     }
 }
