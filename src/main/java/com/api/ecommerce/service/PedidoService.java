@@ -1,5 +1,6 @@
 package com.api.ecommerce.service;
 
+import com.api.ecommerce.dto.AdicionarProdutoDTO;
 import com.api.ecommerce.dto.PedidoRequestDTO;
 import com.api.ecommerce.enums.StatusPedido;
 import com.api.ecommerce.exceptions.EcommerceExceptions;
@@ -92,5 +93,26 @@ public class PedidoService {
         log.info("Pedido {} em: {}", pedido.getPedidoId(), pedido.getStatusPedido());
         pedidoRepository.save(pedido);
         return "Pedido finalizado com sucesso!";
+    }
+
+    @Transactional
+    public String adicionarProdutoNoPedido(AdicionarProdutoDTO adicionarProdutoDTO) {
+        Pedido pedido = getPedidoId(adicionarProdutoDTO.getPedidoId());
+        if (!pedido.getStatusPedido().equals(StatusPedido.EM_ATENDIMENTO)) {
+            throw new EcommerceExceptions("O Status do pedido não está em atendimento!", HttpStatus.CONFLICT);
+        }
+        Produto produto = produtoService.getProduto(adicionarProdutoDTO.getProdutoId());
+        int quantidadeProduto = adicionarProdutoDTO.getQuantidadeProduto();
+        produtoService.validarEstoqueProduto(quantidadeProduto, produto);
+        ItemPedido itemPedido = new ItemPedido();
+        itemPedido.setProduto(produto);
+        itemPedido.setQuantidade(quantidadeProduto);
+        itemPedido.setPedido(pedido);
+        itemPedido.setPrecoUnitario(produto.getPreco());
+        pedido.getItemPedidoList().add(itemPedido);
+        pedido.setValorTotal(pedido.getValorTotal() + (produto.getPreco() + quantidadeProduto));
+        pedidoRepository.save(pedido);
+        produtoService.consumirEstoque(produto, quantidadeProduto);
+        return "Produto adicionado ao pedido com sucesso!";
     }
 }

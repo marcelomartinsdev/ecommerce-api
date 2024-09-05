@@ -1,5 +1,6 @@
 package com.api.ecommerce.controller;
 
+import com.api.ecommerce.dto.AdicionarProdutoDTO;
 import com.api.ecommerce.dto.BaseResponseDTO;
 import com.api.ecommerce.dto.PedidoRequestDTO;
 import com.api.ecommerce.service.PedidoService;
@@ -22,5 +23,10 @@ public class PedidoController extends BaseController{
     @PutMapping("/finalizar")
     public ResponseEntity<BaseResponseDTO> finalizar(@RequestParam Long id) {
         return ok(pedidoService.finalizarPedido(id));
+    }
+
+    @PatchMapping("/adicionar-produto")
+    public ResponseEntity<BaseResponseDTO> adicionar(@RequestBody AdicionarProdutoDTO adicionarProdutoDTO) {
+        return ok(pedidoService.adicionarProdutoNoPedido(adicionarProdutoDTO));
     }
 }
