@@ -2,11 +2,13 @@ package com.api.ecommerce.service;
 
 import com.api.ecommerce.dto.ItemPedidoDTO;
 import com.api.ecommerce.dto.ProdutoRequestDTO;
+import com.api.ecommerce.exceptions.EcommerceExceptions;
 import com.api.ecommerce.model.Produto;
 import com.api.ecommerce.repositories.ProdutoRepository;
 import com.api.ecommerce.service.mapper.ProdutoMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -39,7 +41,7 @@ public class ProdutoService {
         for (ItemPedidoDTO itemPedido : itemPedidoDTOList) {
             Produto produto = getProduto(itemPedido.getProdutoId());
             if (produto.getQuantidadeEstoque() < itemPedido.getQuantidade()) {
-                throw new RuntimeException("O produto: " + produto.getNome() + " não possui estoque suficiente!");
+                throw new EcommerceExceptions("O produto: " + produto.getNome() + " não possui estoque suficiente!", HttpStatus.CONFLICT);
             }
             response.add(produto);
         }
@@ -47,7 +49,7 @@ public class ProdutoService {
     }
 
     public Produto getProduto(Long id) {
-        return produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto: " + id + " nao cadastrado!"));
+        return produtoRepository.findById(id).orElseThrow(() -> new EcommerceExceptions("Produto: " + id + " nao cadastrado!", HttpStatus.CONFLICT));
     }
 
     @Transactional

@@ -2,6 +2,7 @@ package com.api.ecommerce.service;
 
 import com.api.ecommerce.dto.PedidoRequestDTO;
 import com.api.ecommerce.enums.StatusPedido;
+import com.api.ecommerce.exceptions.EcommerceExceptions;
 import com.api.ecommerce.model.Cliente;
 import com.api.ecommerce.model.ItemPedido;
 import com.api.ecommerce.model.Pedido;
@@ -10,6 +11,7 @@ import com.api.ecommerce.repositories.PedidoRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -75,14 +77,14 @@ public class PedidoService {
     }
 
     public Pedido getPedidoId(Long id) {
-        return pedidoRepository.findById(id).orElseThrow(() -> new RuntimeException("Pedido com id: " + id + " não encontrado!"));
+        return pedidoRepository.findById(id).orElseThrow(() -> new EcommerceExceptions("Pedido com id: " + id + " não encontrado!", HttpStatus.CONFLICT));
     }
 
     @Transactional
     public String finalizarPedido(Long idPedido) {
         Pedido pedido = getPedidoId(idPedido);
         if (!pedido.getStatusPedido().equals(StatusPedido.EM_ATENDIMENTO)) {
-            throw new RuntimeException("Status do pedido: " + pedido.getStatusPedido() + " não pode ser finalizado!");
+            throw new EcommerceExceptions("Status do pedido: " + pedido.getStatusPedido() + " não pode ser finalizado!", HttpStatus.CONFLICT);
         }
 
         pagamentoService.gerarPagamento(pedido);

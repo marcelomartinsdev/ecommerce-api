@@ -1,10 +1,12 @@
 package com.api.ecommerce.service;
 
 import com.api.ecommerce.dto.CadastroClienteRequestDTO;
+import com.api.ecommerce.exceptions.EcommerceExceptions;
 import com.api.ecommerce.model.Cliente;
 import com.api.ecommerce.repositories.ClienteRepository;
 import com.api.ecommerce.service.mapper.ClienteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,6 +36,6 @@ public class ClienteService {
     }
 
     public Cliente retornarCliente(Long id) {
-        return clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente com id: " + id + " não encontrado!"));
+        return clienteRepository.findById(id).orElseThrow(() -> new EcommerceExceptions("Cliente com id: " + id + " não encontrado!", HttpStatus.CONFLICT));
     }
 }
