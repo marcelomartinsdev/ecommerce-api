@@ -26,6 +26,6 @@ public class Pedido extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private StatusPedido statusPedido;
     private String codigoRastreio;
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itemPedidoList;
 }

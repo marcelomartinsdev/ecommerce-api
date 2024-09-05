@@ -40,12 +40,16 @@ public class ProdutoService {
         List<Produto> response = new ArrayList<>();
         for (ItemPedidoDTO itemPedido : itemPedidoDTOList) {
             Produto produto = getProduto(itemPedido.getProdutoId());
-            if (produto.getQuantidadeEstoque() < itemPedido.getQuantidade()) {
-                throw new EcommerceExceptions("O produto: " + produto.getNome() + " não possui estoque suficiente!", HttpStatus.CONFLICT);
-            }
+            validarEstoqueProduto(itemPedido.getQuantidade(), produto);
             response.add(produto);
         }
         return response;
+    }
+
+    public void validarEstoqueProduto(int quantidade, Produto produto) {
+        if (produto.getQuantidadeEstoque() < quantidade) {
+            throw new EcommerceExceptions("O produto: " + produto.getNome() + " não possui estoque suficiente!", HttpStatus.CONFLICT);
+        }
     }
 
     public Produto getProduto(Long id) {
@@ -60,5 +64,11 @@ public class ProdutoService {
             cont++;
         }
         produtoRepository.saveAll(produtoList);
+    }
+
+    @Transactional
+    public void consumirEstoque(Produto produto, int quantidade) {
+        produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - quantidade);
+        produtoRepository.save(produto);
     }
 }

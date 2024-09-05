@@ -28,7 +28,7 @@ public class BaseController {
         return ResponseEntity.ok(response);
     }
 
-    private ResponseEntity<BaseResponseDTO> err(Integer codeStatus, Object data) {
+    public ResponseEntity<BaseResponseDTO> err(Integer codeStatus, Object data) {
         BaseResponseDTO response = new BaseResponseDTO();
         response.setCode(codeStatus);
         response.setData(data);
