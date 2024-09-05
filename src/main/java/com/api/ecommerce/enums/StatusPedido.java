@@ -1,8 +1,8 @@
 package com.api.ecommerce.enums;
 
 public enum StatusPedido {
-    EM_ATEDIMENTO(1, "Em atedimento"),
-    AGURADANDO_CONFIMACO_PAGAMENTO(2, "Aguardando confimação pagamento"),
+    EM_ATENDIMENTO(1, "Em atendimento"),
+    AGUARDANDO_CONFIMACO_PAGAMENTO(2, "Aguardando confimação pagamento"),
     CANCELADO(3, "Cancelado"),
     EXPEDIDO(4, "Expedido"),
     ENTREGUE(5, "Entregue"),

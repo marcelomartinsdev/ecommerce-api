@@ -1,11 +1,7 @@
 package com.api.ecommerce.model;
 
-import com.api.ecommerce.enums.MetodoPagamento;
 import com.api.ecommerce.enums.StatusPagamento;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,12 +10,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Pagamento extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
     @JoinColumn(name = "pedidoId")
     private Pedido pedido;
-    private int valorPagamento;
-    private MetodoPagamento metodoPagamento;
-    private int numeroTransacao;
+    private double debitar;
+    private Long numeroTransacao;
+    @Enumerated(EnumType.STRING)
     private StatusPagamento statusPagamento;
 }
