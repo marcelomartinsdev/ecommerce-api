@@ -3,6 +3,7 @@ package com.api.ecommerce.controller;
 import com.api.ecommerce.dto.AdicionarProdutoDTO;
 import com.api.ecommerce.dto.BaseResponseDTO;
 import com.api.ecommerce.dto.PedidoRequestDTO;
+import com.api.ecommerce.dto.RemoverProdutoDTO;
 import com.api.ecommerce.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,10 @@ public class PedidoController extends BaseController{
     @PatchMapping("/adicionar-produto")
     public ResponseEntity<BaseResponseDTO> adicionar(@RequestBody AdicionarProdutoDTO adicionarProdutoDTO) {
         return ok(pedidoService.adicionarProdutoNoPedido(adicionarProdutoDTO));
+    }
+
+    @PatchMapping("/remover-produto")
+    public ResponseEntity<BaseResponseDTO> remover(@RequestBody RemoverProdutoDTO removerProdutoDTO) {
+        return ok(pedidoService.removerProdutoNoPedido(removerProdutoDTO));
     }
 }

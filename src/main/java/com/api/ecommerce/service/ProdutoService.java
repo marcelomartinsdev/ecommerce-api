@@ -71,4 +71,10 @@ public class ProdutoService {
         produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - quantidade);
         produtoRepository.save(produto);
     }
+
+    @Transactional
+    public void retornarAoEstoque(Produto produto, int quantidadeProduto) {
+        produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + quantidadeProduto);
+        produtoRepository.save(produto);
+    }
 }
